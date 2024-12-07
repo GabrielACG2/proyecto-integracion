@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Inventario{% endblock %}
+
+{% block content %}
+{% load static %}
+<!-- ventas/templates/ventas/reportes_ventas.html -->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes de Ventas - Poleras</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold mb-6">Reportes de Ventas - Poleras</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Ventas Mensuales de Poleras</h2>
+                <canvas id="ventasMensualesChart"></canvas>
+            </div>
+
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Tendencia de Ventas</h2>
+                <canvas id="tendenciaVentasChart"></canvas>
+            </div>
+
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Distribución de Ventas por Tipo de Polera</h2>
+                <canvas id="distribucionVentasChart"></canvas>
+            </div>
+
+            <div class="bg-white p-4 rounded-lg shadow">
+                <h2 class="text-xl font-semibold mb-4">Datos de Ventas</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-200">
+                                <th class="px-4 py-2">Mes</th>
+                                <th class="px-4 py-2">Ventas Poleras</th>
+                                <th class="px-4 py-2">Ventas Camisas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="datosVentasBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de ventas mensuales
+        const datosVentasMensuales = JSON.parse('{{ datos_ventas_mensuales|safe }}');
+        const ctxVentasMensuales = document.getElementById('ventasMensualesChart').getContext('2d');
+        new Chart(ctxVentasMensuales, {
+            type: 'bar',
+            data: {
+                labels: datosVentasMensuales.map(d => d.mes),
+                datasets: [{
+                    label: 'Ventas',
+                    data: datosVentasMensuales.map(d => d.ventas),
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Datos de tendencia de ventas
+        const datosTendenciaVentas = JSON.parse('{{ datos_tendencia_ventas|safe }}');
+        const ctxTendenciaVentas = document.getElementById('tendenciaVentasChart').getContext('2d');
+        new Chart(ctxTendenciaVentas, {
+            type: 'line',
+            data: {
+                labels: datosTendenciaVentas.map(d => d.mes),
+                datasets: [{
+                    label: 'Poleras',
+                    data: datosTendenciaVentas.map(d => d.poleras),
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    fill: false
+                }, {
+                    label: 'Camisas',
+                    data: datosTendenciaVentas.map(d => d.camisas),
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Datos de distribución de ventas
+        const datosDistribucionVentas = JSON.parse('{{ datos_distribucion_ventas|safe }}');
+        const ctxDistribucionVentas = document.getElementById('distribucionVentasChart').getContext('2d');
+        new Chart(ctxDistribucionVentas, {
+            type: 'pie',
+            data: {
+                labels: datosDistribucionVentas.map(d => d.nombre),
+                datasets: [{
+                    data: datosDistribucionVentas.map(d => d.valor),
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 206, 86, 0.6)',
+                        'rgba(75, 192, 192, 0.6)',
+                    ],
+                }]
+            },
+            options: {
+                responsive: true,
+            }
+        });
+
+        // Llenar la tabla de datos
+        const datosVentasBody = document.getElementById('datosVentasBody');
+        datosTendenciaVentas.forEach(d => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="border px-4 py-2">${d.mes}</td>
+                <td class="border px-4 py-2">${d.poleras}</td>
+                <td class="border px-4 py-2">${d.camisas}</td>
+            `;
+            datosVentasBody.appendChild(row);
+        });
+    </script>
+</body>
+</html>
+
+{% endblock %}

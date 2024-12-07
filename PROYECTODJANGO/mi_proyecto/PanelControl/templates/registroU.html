@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión - Registro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                            <!--
+                <div class="flex space-x-8">
+                    <a href="#" class="inline-flex items-center px-1 pt-1 text-[#FF6347] hover:text-[#FF4500]">Ventas</a>
+                    <a href="#" class="inline-flex items-center px-1 pt-1 text-[#FF6347] hover:text-[#FF4500]">Inventario</a>
+                    <a href="#" class="inline-flex items-center px-1 pt-1 text-[#FF6347] hover:text-[#FF4500]">Reportes</a>
+                    <a href="#" class="inline-flex items-center px-1 pt-1 text-[#FF6347] hover:text-[#FF4500]">Inicio</a>
+                </div>
+                -->
+                <div class="flex items-center space-x-4">
+                    <a href="registroU.html" class="text-[#FF6347] hover:text-[#FF4500]">Registrarse</a>
+                    <button class="bg-[#FF6347] hover:bg-[#FF4500] text-white font-bold py-2 px-4 rounded">
+                        Iniciar sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-2xl mx-auto mt-8 px-4 py-8">
+        <h1 class="text-4xl font-bold mb-6">Registro</h1>
+
+        <!-- Formulario de registro -->
+        <form method="POST" action="" id="registrationForm" class="space-y-6">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label for="fullName" class="block text-sm font-medium text-gray-700">Nombre completo</label>
+                    <input type="text" id="fullName" name="fullName" required
+                        class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#FF6347] focus:border-[#FF6347]">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Número de teléfono</label>
+                        <input type="tel" id="phone" name="phone" required
+                            class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#FF6347] focus:border-[#FF6347]">
+                    </div>
+
+                    <div>
+                        <label for="company" class="block text-sm font-medium text-gray-700">Nombre de la empresa</label>
+                        <input type="text" id="company" name="company"
+                            class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#FF6347] focus:border-[#FF6347]">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+                    <input type="email" id="email" name="email" required
+                        class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#FF6347] focus:border-[#FF6347]">
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                        <input type="password" id="password" name="password" required
+                            class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#FF6347] focus:border-[#FF6347]">
+                    </div>
+
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Repite la contraseña</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" required
+                            class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#FF6347] focus:border-[#FF6347]">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="terms" name="terms" value="true" required
+                    class="h-4 w-4 text-[#FF6347] focus:ring-[#FF6347] border-gray-300 rounded">
+                <label for="terms" class="text-sm font-medium text-[#FF6347]">
+                    Acepta los términos y condiciones
+                </label>
+            </div>
+
+            <button type="submit" 
+                class="w-full bg-[#FF6347] hover:bg-[#FF4500] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Registrarse
+            </button>
+        </form>
+
+        <!-- Mensajes de éxito o error -->
+        {% if messages %}
+            <div class="mt-4">
+                {% for message in messages %}
+                    <div class="text-white px-4 py-2 rounded bg-red-500">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>

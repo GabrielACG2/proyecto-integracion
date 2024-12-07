@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión - Iniciar Sesión</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <!--
+                <div class="flex space-x-8">
+                    <a href="#" class="inline-flex items-center px-1 pt-1 text-[#FF6347] hover:text-[#FF4500]">Ventas</a>
+                    <a href="#" class="inline-flex items-center px-1 pt-1 text-[#FF6347] hover:text-[#FF4500]">Inventario</a>
+                    <a href="#" class="inline-flex items-center px-1 pt-1 text-[#FF6347] hover:text-[#FF4500]">Reportes</a>
+                    <a href="#" class="inline-flex items-center px-1 pt-1 text-[#FF6347] hover:text-[#FF4500]">Inicio</a>
+                </div>
+                -->
+                <div class="flex items-center space-x-4">
+                    <a href="{% url 'registro' %}" class="text-[#FF6347] hover:text-[#FF4500]">Registrarse</a>
+                    <button class="bg-[#FF6347] hover:bg-[#FF4500] text-white font-bold py-2 px-4 rounded">
+                        Iniciar sesión
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-md mx-auto mt-8 px-4 py-8">
+        <h1 class="text-4xl font-bold mb-6 text-center">Iniciar Sesión</h1>
+        
+        <p class="text-gray-600 mb-8 text-center">
+            Ingrese sus credenciales para acceder al sistema de gestión de ventas e inventario.
+        </p>
+
+        <!-- Formulario de inicio de sesión -->
+        <form method="POST" action="{% url 'login' %}" class="space-y-6">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+                    <input type="email" id="email" name="email" required
+                        class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#FF6347] focus:border-[#FF6347]">
+                </div>
+        
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                    <input type="password" id="password" name="password" required
+                        class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#FF6347] focus:border-[#FF4500]">
+                </div>
+            </div>
+        
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input type="checkbox" id="remember" name="remember"
+                        class="h-4 w-4 text-[#FF6347] focus:ring-[#FF6347] border-gray-300 rounded">
+                    <label for="remember" class="ml-2 block text-sm text-gray-900">
+                        Recordarme
+                    </label>
+                </div>
+        
+                <div class="text-sm">
+                    <a href="#" class="font-medium text-[#FF6347] hover:text-[#FF4500]">
+                        ¿Olvidó su contraseña?
+                    </a>
+                </div>
+            </div>
+        
+            <button type="submit" 
+                class="w-full bg-[#FF6347] hover:bg-[#FF4500] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Iniciar Sesión
+            </button>
+        </form>
+        
+        <p class="mt-8 text-center text-sm text-gray-600">
+            ¿No tiene una cuenta? 
+            <a href="{% url 'registro' %}" class="font-medium text-[#FF6347] hover:text-[#FF4500]">
+                Regístrese aquí
+            </a>
+        </p>
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div class="bg-red-500 text-white px-4 py-2 rounded mb-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    
+    </main>
+</body>
+</html>

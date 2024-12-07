@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Gestión{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6347',
+                        secondary: '#FF4500',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-white text-gray-800">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="bg-primary text-white w-64 min-h-screen p-4 shadow-lg transition-all duration-300 ease-in-out">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-semibold">Menu</h2>
+                <button id="menuToggle" class="text-white hover:text-secondary transition-colors duration-200">
+                    <i data-feather="chevron-left" class="h-6 w-6"></i>
+                </button>
+            </div>
+            <nav>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="{% url 'index' %}" class="flex items-center py-2 px-4 hover:bg-secondary rounded-lg transition-colors duration-200">
+                            <i data-feather="home" class="mr-3"></i>
+                            <span>Inicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'ventas' %}" class="flex items-center py-2 px-4 hover:bg-secondary rounded-lg transition-colors duration-200">
+                            <i data-feather="dollar-sign" class="mr-3"></i>
+                            <span>Ventas</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'inventario' %}" class="flex items-center py-2 px-4 hover:bg-secondary rounded-lg transition-colors duration-200">
+                            <i data-feather="box" class="mr-3"></i>
+                            <span>Inventario</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'reportes' %}" class="flex items-center py-2 px-4 hover:bg-secondary rounded-lg transition-colors duration-200">
+                            <i data-feather="bar-chart-2" class="mr-3"></i>
+                            <span>Reportes</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow-sm">
+                <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-end items-center">
+                    <div class="flex items-center">
+                        <span class="text-gray-800 mr-4">Bienvenido, Usuario</span>
+                        <a href="{% url 'cerrar_sesion' %}" 
+                           class="bg-primary hover:bg-secondary text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center">
+                            <i data-feather="log-out" class="mr-2 h-4 w-4"></i>
+                            Cerrar Sesión
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-white p-6">
+                {% block content %}
+                <!-- Aquí se insertará el contenido de cada página -->
+                {% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Feather icons
+        feather.replace();
+
+        // Sidebar toggle functionality
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = this;
+            sidebar.classList.toggle('w-64');
+            sidebar.classList.toggle('w-16');
+            
+            // Toggle icon between chevron-left and chevron-right
+            if (sidebar.classList.contains('w-16')) {
+                menuToggle.innerHTML = '<i data-feather="chevron-right"></i>';
+                sidebar.querySelectorAll('span').forEach(el => el.classList.add('hidden'));
+            } else {
+                menuToggle.innerHTML = '<i data-feather="chevron-left"></i>';
+                sidebar.querySelectorAll('span').forEach(el => el.classList.remove('hidden'));
+            }
+            feather.replace(); // Re-initialize icons after changing
+        });
+    </script>
+</body>
+</html>

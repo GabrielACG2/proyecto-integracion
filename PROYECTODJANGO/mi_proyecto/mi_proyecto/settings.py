@@ -26,6 +26,10 @@ SECRET_KEY = 'django-insecure-7p79$0xx**gmuhjqi!rn5^bs92eh4qxunkx2)z_gh8qdx$$4w!
 DEBUG = True
 
 ALLOWED_HOSTS = []
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default
+    'PanelControl.authentication_backends.EmailBackend',  # Backend personalizado
+]
 
 
 # Application definition
@@ -125,3 +129,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configurar el modelo de usuario personalizado
 AUTH_USER_MODEL = 'PanelControl.Usuario'
+# settings.py
+
+LOGIN_URL = '/login/'  # URL para la página de inicio de sesión
+LOGIN_REDIRECT_URL = '/index/'  # URL a la que redirige después de iniciar sesión
+LOGOUT_REDIRECT_URL = '/login/'  # URL a la que redirige después de cerrar sesión

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Inventario{% endblock %}
+
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Registro de Ventas</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --orange-50: #fff7ed;
+            --orange-100: #ffedd5;
+            --orange-500: #f97316;
+            --orange-600: #ea580c;
+        }
+    </style>
+</head>
+<body class="bg-orange-50 min-h-screen">
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold mb-6 text-orange-600">Sistema de Registro de Ventas</h1>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                <div>
+                    <label for="customer_name" class="block text-sm font-medium text-gray-700">Nombre del Cliente</label>
+                    <input type="text" name="customer_name" id="customer_name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+                </div>
+                <div>
+                    <label for="sale_date" class="block text-sm font-medium text-gray-700">Fecha de Venta</label>
+                    <input type="date" name="sale_date" id="sale_date" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+                </div>
+                <div id="products">
+                    <div class="product-item space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">Producto 1</label>
+                        <input type="text" name="product_name[]" placeholder="Nombre del Producto" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+                        <input type="number" name="quantity[]" placeholder="Cantidad" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+                        <input type="number" name="price[]" placeholder="Precio" step="0.01" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+                    </div>
+                </div>
+                <button type="button" id="add-product" class="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600">Agregar Producto</button>
+                <div>
+                    <label for="notes" class="block text-sm font-medium text-gray-700">Notas</label>
+                    <textarea name="notes" id="notes" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"></textarea>
+                </div>
+                <div class="text-orange-600 font-bold">
+                    <strong>Total: $<span id="total">0.00</span></strong>
+                </div>
+                <button type="submit" class="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600">Registrar Venta</button>
+            </form>
+        </div>
+
+        <div>
+            <h2 class="text-xl font-bold mb-4 text-orange-600">Registro de Ventas</h2>
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-orange-100">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Productos</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for sale in sales %}
+                    <tr class="{% cycle 'bg-white' 'bg-orange-50' %}">
+                        <td class="px-6 py-4 whitespace-nowrap">{{ sale.id }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ sale.customer_name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">{{ sale.sale_date }}</td>
+                        <td class="px-6 py-4">
+                            <ul>
+                                {% for item in sale.items.all %}
+                                <li>{{ item.product_name }} - Cantidad: {{ item.quantity }}, Precio: ${{ item.price }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">${{ sale.total }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const addProductButton = document.getElementById('add-product');
+            const productsContainer = document.getElementById('products');
+            let productCount = 1;
+
+            addProductButton.addEventListener('click', function() {
+                productCount++;
+                const newProduct = document.createElement('div');
+                newProduct.className = 'product-item space-y-2 mt-4';
+                newProduct.innerHTML = `
+                    <label class="block text-sm font-medium text-gray-700">Producto ${productCount}</label>
+                    <input type="text" name="product_name[]" placeholder="Nombre del Producto" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+                    <input type="number" name="quantity[]" placeholder="Cantidad" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+                    <input type="number" name="price[]" placeholder="Precio" step="0.01" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+                `;
+                productsContainer.appendChild(newProduct);
+            });
+
+            function calculateTotal() {
+                let total = 0;
+                const quantities = document.getElementsByName('quantity[]');
+                const prices = document.getElementsByName('price[]');
+                for (let i = 0; i < quantities.length; i++) {
+                    total += quantities[i].value * prices[i].value;
+                }
+                document.getElementById('total').textContent = total.toFixed(2);
+            }
+
+            productsContainer.addEventListener('input', calculateTotal);
+        });
+    </script>
+</body>
+</html>
+
+{% endblock %}
